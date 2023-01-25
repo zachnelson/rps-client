@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+
+.buttonContainer {
+  width: 100%;
+  text-align: center;
+  margin: auto;
+}
+
+.rpsButton {
+  margin: 10px;
+  display: inline-block;
+}
+
+.headerText {
+  text-align: center;
+  width: 100%;
+}
+
+.bigButton {
+  text-align: center;
+}
