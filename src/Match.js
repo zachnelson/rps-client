@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function Match({ userObj, matchID, setIdle }) {
+export default function Match({ userObj, matchID, resetSession }) {
   let [headerText, setHeaderText] = useState("Make a selection");
+  let [hand, setHand] = useState(null);
   let { name, userID } = userObj;
-
-  //console.log(name + " " + userID.current);
 
   function handSelected(hand) {
     setHeaderText("You chose " + hand);
+    setHand(hand);
   }
 
   useEffect(() => {
@@ -19,27 +19,37 @@ export default function Match({ userObj, matchID, setIdle }) {
     //   console.log(result.data)
     // }
     // fetchData();
-    axios.post(`/game/find`).then((res) => {
-      console.log(res);
-      console.log(res.data);
-    });
+    if (setHeaderText !== "Make a selection") {
+      axios
+        .post(`/game/find`, { id: userID.current, hand: hand })
+        .then((res) => {
+          console.log(res);
+          console.log(res.data);
+        });
+    }
   }, [setHeaderText]);
 
   return (
     <>
-      <button onClick={() => setIdle(true)}>Return to Main Menu</button>
+      <button
+        onClick={() => {
+          resetSession();
+        }}
+      >
+        Return to Main Menu
+      </button>
       <div>
         <h1 className="headerText">{headerText}</h1>
       </div>
       <div className="buttonContainer">
         <button className="rpsButton" onClick={() => handSelected("Rock")}>
-          Rock
+          Rock👊
         </button>
         <button className="rpsButton" onClick={() => handSelected("Paper")}>
-          Paper
+          Paper✋
         </button>
         <button className="rpsButton" onClick={() => handSelected("Scissors")}>
-          Scissors
+          Scissors✌
         </button>
       </div>
     </>

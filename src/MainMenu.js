@@ -1,5 +1,6 @@
-import { useRef } from "react";
-export default function MainMenu({ name, setName, setIdle }) {
+import { useRef, useState } from "react";
+export default function MainMenu({ name, setName, setMatchSearch }) {
+  let [matchText, setMatchText] = useState("Find match");
   let tempName = useRef(null);
 
   return (
@@ -23,10 +24,13 @@ export default function MainMenu({ name, setName, setIdle }) {
         <div className="buttonContainer">
           <button
             className="center"
-            disabled={name === null}
-            onClick={() => setIdle(false)}
+            disabled={matchText === "Finding match..."}
+            onClick={() => {
+              setMatchText("Finding match...");
+              setMatchSearch();
+            }}
           >
-            Find match
+            {matchText}
           </button>
         </div>
       </div>
