@@ -1,12 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function Match({ userID, matchID, setIdle }) {
+export default function Match({ userObj, matchID, setIdle }) {
   let [headerText, setHeaderText] = useState("Make a selection");
+  let { name, userID } = userObj;
+
+  //console.log(name + " " + userID.current);
 
   function handSelected(hand) {
     setHeaderText("You chose " + hand);
-    //api call -> {matchID, userID, hand}
   }
+
+  useEffect(() => {
+    // async function fetchData(){
+    //   const result = await axios(
+    //     '/game/find',
+    //   );
+    //   console.log(result.data)
+    // }
+    // fetchData();
+    axios.post(`/game/find`).then((res) => {
+      console.log(res);
+      console.log(res.data);
+    });
+  }, [setHeaderText]);
 
   return (
     <>

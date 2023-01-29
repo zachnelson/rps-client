@@ -1,14 +1,17 @@
 import "./styles/App.css";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Match from "./Match";
 import MainMenu from "./MainMenu";
 
 function App() {
   let [idle, setIdle] = useState(true);
-  let [userID, setUserID] = useState(null);
+  let [name, setName] = useState(null);
+  let userID = useRef(null);
   let matchID;
 
-  if (userID == null) setUserID(genRandomString(12));
+  useEffect(() => {
+    userID.current = genRandomString(12);
+  }, [name]);
 
   function getMatch() {
     //useEffect - get match id
@@ -17,9 +20,9 @@ function App() {
   return (
     <>
       {idle ? (
-        <MainMenu setIdle={setIdle} />
+        <MainMenu name={name} setName={setName} setIdle={setIdle} />
       ) : (
-        <Match userID={userID} matchID={matchID} setIdle={setIdle} />
+        <Match userObj={{ name, userID }} matchID={matchID} setIdle={setIdle} />
       )}
     </>
   );
