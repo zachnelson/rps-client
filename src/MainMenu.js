@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-export default function MainMenu({ name, setName, setMatchSearch }) {
+export default function MainMenu({ name, setName, findMatch }) {
   let [matchText, setMatchText] = useState("Find match");
   let tempName = useRef(null);
 
@@ -27,7 +27,7 @@ export default function MainMenu({ name, setName, setMatchSearch }) {
             disabled={matchText === "Finding match..."}
             onClick={() => {
               setMatchText("Finding match...");
-              setMatchSearch();
+              findMatch();
             }}
           >
             {matchText}

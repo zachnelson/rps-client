@@ -5,9 +5,8 @@ import MainMenu from "./MainMenu";
 import axios from "axios";
 
 function App() {
-  let [matchSearch, setMatchSearch] = useState(false);
   let [name, setName] = useState(null);
-  let [matchID, setmatchID] = useState(null);
+  let [matchID, setMatchID] = useState(null);
   let userID = useRef(null);
 
   //assign user ID
@@ -18,31 +17,38 @@ function App() {
     }
   }, [name]);
 
-  //find match
-  useEffect(() => {
-    if (matchSearch !== false) {
-      console.log("finding match...");
-      axios.post(`/game/find`, { id: userID.current }).then((res) => {
-        console.log(res);
-        console.log(res.data);
-        //TODO: assign match id here
-      });
-    }
-  }, [matchSearch]);
+  function findMatch() {
+    setTimeout(() => {
+      let tempMatch = null;
+      if (matchID === null) {
+        console.log("finding match...");
+        axios
+          .get(`/game/find`, {
+            params: {
+              userId: userID.current,
+            },
+          })
+          .then((res) => {
+            let response = res.data.matchId;
+            console.log("matchId: " + response);
+            if (response !== "") {
+              tempMatch = response;
+              setMatchID(response);
+            }
+            if (tempMatch === null) findMatch();
+          });
+      }
+    }, 5000);
+  }
 
   function resetSession() {
-    setMatchSearch(false);
-    setmatchID(null);
+    setMatchID(null);
   }
 
   return (
     <>
-      {!matchSearch ? (
-        <MainMenu
-          name={name}
-          setName={setName}
-          setMatchSearch={setMatchSearch}
-        />
+      {matchID === null ? (
+        <MainMenu name={name} setName={setName} findMatch={findMatch} />
       ) : (
         <Match
           userObj={{ name, userID }}

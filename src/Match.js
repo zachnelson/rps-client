@@ -3,31 +3,30 @@ import axios from "axios";
 
 export default function Match({ userObj, matchID, resetSession }) {
   let [headerText, setHeaderText] = useState("Make a selection");
-  let [hand, setHand] = useState(null);
   let { name, userID } = userObj;
 
   function handSelected(hand) {
     setHeaderText("You chose " + hand);
-    setHand(hand);
   }
 
-  useEffect(() => {
-    // async function fetchData(){
-    //   const result = await axios(
-    //     '/game/find',
-    //   );
-    //   console.log(result.data)
-    // }
-    // fetchData();
-    if (setHeaderText !== "Make a selection") {
+  function playHand(hand) {
+    setTimeout(() => {
+      console.log("playing hand: " + hand + " " + userID.current);
       axios
-        .post(`/game/find`, { id: userID.current, hand: hand })
+        .get(`/game/play-hand`, {
+          params: {
+            userId: userID.current,
+            hand: hand,
+          },
+        })
         .then((res) => {
-          console.log(res);
-          console.log(res.data);
+          if (res.data.winnerId !== "") {
+            if (res.data.winnerId === userID.current) setHeaderText("Winner!");
+            else setHeaderText("Loser!");
+          } else playHand(hand);
         });
-    }
-  }, [setHeaderText]);
+    }, 5000);
+  }
 
   return (
     <>
@@ -42,13 +41,34 @@ export default function Match({ userObj, matchID, resetSession }) {
         <h1 className="headerText">{headerText}</h1>
       </div>
       <div className="buttonContainer">
-        <button className="rpsButton" onClick={() => handSelected("Rock")}>
+        <button
+          disabled={headerText !== "Make a selection"}
+          className="rpsButton"
+          onClick={() => {
+            handSelected("Rock");
+            playHand("rock");
+          }}
+        >
           Rock👊
         </button>
-        <button className="rpsButton" onClick={() => handSelected("Paper")}>
+        <button
+          disabled={headerText !== "Make a selection"}
+          className="rpsButton"
+          onClick={() => {
+            handSelected("Paper");
+            playHand("paper");
+          }}
+        >
           Paper✋
         </button>
-        <button className="rpsButton" onClick={() => handSelected("Scissors")}>
+        <button
+          disabled={headerText !== "Make a selection"}
+          className="rpsButton"
+          onClick={() => {
+            handSelected("Scissors");
+            playHand("scissors");
+          }}
+        >
           Scissors✌
         </button>
       </div>
