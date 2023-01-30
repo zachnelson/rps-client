@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 export default function Match({ userObj, matchID, resetSession }) {
@@ -7,13 +7,14 @@ export default function Match({ userObj, matchID, resetSession }) {
 
   function handSelected(hand) {
     setHeaderText("You chose " + hand);
+    playHand(hand.toLowerCase());
   }
 
   function playHand(hand) {
     setTimeout(() => {
       console.log("playing hand: " + hand + " " + userID.current);
       axios
-        .get(`/game/play-hand`, {
+        .get(`/game/match/play`, {
           params: {
             userId: userID.current,
             hand: hand,
@@ -46,7 +47,6 @@ export default function Match({ userObj, matchID, resetSession }) {
           className="rpsButton"
           onClick={() => {
             handSelected("Rock");
-            playHand("rock");
           }}
         >
           Rock👊
@@ -56,7 +56,6 @@ export default function Match({ userObj, matchID, resetSession }) {
           className="rpsButton"
           onClick={() => {
             handSelected("Paper");
-            playHand("paper");
           }}
         >
           Paper✋
@@ -66,7 +65,6 @@ export default function Match({ userObj, matchID, resetSession }) {
           className="rpsButton"
           onClick={() => {
             handSelected("Scissors");
-            playHand("scissors");
           }}
         >
           Scissors✌
