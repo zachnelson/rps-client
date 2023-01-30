@@ -25,6 +25,9 @@ export default function Match({ userObj, matchID, resetSession }) {
             if (res.data.winnerId === userID.current) setHeaderText("Winner!");
             else setHeaderText("Loser!");
           } else playHand(hand);
+        })
+        .catch(function (error) {
+          console.log("Caught error: " + error.message);
         });
     }, 5000);
   }
